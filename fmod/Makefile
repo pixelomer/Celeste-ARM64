@@ -1,6 +1,8 @@
-all: fmod_preload.so libfmodstudio.so.10 libfmod.so.10
+all: sound nosound
+clean:
+	rm -rf nosound sound
 nosound: nosound/libfmod.so.10 nosound/libfmodstudio.so.10
-sound: fmod_preload.so
+sound: sound/fmod_preload.so
 
 sound/fmod_preload.so: fmod_preload.c
 	@mkdir -p sound
