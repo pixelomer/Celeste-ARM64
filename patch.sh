@@ -2,7 +2,7 @@
 
 # Only tested with unmodded 1.4.0.0-fna
 
-if [ "$#" -le 1 ]; then
+if [ "$#" -lt 1 ]; then
 	echo "Usage: patch_celeste.sh Celeste.exe"
 	exit 1
 fi
