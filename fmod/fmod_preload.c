@@ -1,7 +1,6 @@
 #define _GNU_SOURCE
 #include <stdbool.h>
 #include <stdio.h>
-#include <libgen.h>
 #include <dlfcn.h>
 #include <string.h>
 
@@ -46,7 +45,9 @@ void *dlopen(const char *filename, int flags) {
 	//printf("dlopen(\"%s\", %d)", filename, flags);
 	void *result = dlopen_real(filename, flags);
 	if (((fmodstudio == NULL) || (fmod == NULL)) && (result != NULL) && (filename != NULL)) {
-		char *name = basename(filename);
+		char filename_copy[strlen(filename)+1];
+		strcpy(filename_copy, filename);
+		char *name = basename(filename_copy);
 		if (strcmp(name, "libfmodstudio.so.10") == 0) {
 			fmodstudio = result;
 		}
