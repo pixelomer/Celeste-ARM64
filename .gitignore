@@ -1,3 +1,9 @@
 **/.DS_Store
 fmod/sound
 fmod/nosound
+otherlibs/FMOD_SDL
+otherlibs/SDL
+otherlibs/FNA3D
+otherlibs/libfmod_SDL.so
+otherlibs/libFNA3D.so.0
+otherlibs/libSDL2-2.0.so.0
