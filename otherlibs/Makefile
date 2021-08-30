@@ -26,7 +26,7 @@ FNA3D:
 
 libFNA3D.so.0: FNA3D libSDL2-2.0.so.0
 	rm -rf FNA3D/build
-	cd FNA3D && mkdir build && cd build && cmake .. && make -j4
+	cd FNA3D && mkdir build && cd build && cmake -DSDL2_LIBRARIES="$$(pwd)/../../SDL/out/lib/libSDL2-2.0.so.0" -DSDL2_INCLUDE_DIRS="$$(pwd)/../../SDL/out/include/SDL2" .. && make -j4
 	cp -H FNA3D/build/libFNA3D.so ./libFNA3D.so.0
 
 SDL:
