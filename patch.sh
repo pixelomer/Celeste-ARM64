@@ -17,13 +17,14 @@ cd ../fmod
 echo "[+] Building FMOD preload"
 make sound
 
+cd ..
 echo "[+] Patching Celeste.exe"
-./patch_celeste.sh "$1"
+./fmod/patch_celeste.sh "$1"
 
 celeste_dir="$(dirname "$1")"
 
 echo "[+] Creating start.sh"
-cp fmod/fmod_preload.so "${celeste_dir}/"
+cp fmod/sound/fmod_preload.so "${celeste_dir}/"
 cat > "${celeste_dir}/start.sh" <<'EOF'
 #!/usr/bin/env bash
 cd "${0%/*}"
@@ -35,8 +36,9 @@ echo "[+] Copying libraries to Celeste directory"
 if [ -d "${celeste_dir}/lib64" ] && [ ! -d "${celeste_dir}/lib64.bak" ]; then
 	mv "${celeste_dir}/lib64" "${celeste_dir}/lib64.bak"
 fi
+rm -rf "${celeste_dir}/lib64"
 mkdir -p "${celeste_dir}/lib64"
 cp -H otherlibs/*.so* otherlibs/FMOD_SDL/libfmod.so.13 otherlibs/FMOD_SDL/libfmodstudio.so.13 "${celeste_dir}/lib64/"
 cd "${celeste_dir}/lib64/"
-ln -s libfmod.so.10 libfmod.so.13
-ln -s libfmodstudio.so.10 libfmodstudio.so.13
+ln -s libfmod.so.13 libfmod.so.10
+ln -s libfmodstudio.so.13 libfmodstudio.so.10
