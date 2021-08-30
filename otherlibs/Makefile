@@ -6,7 +6,7 @@ FMOD_SDL:
 	cd FMOD_SDL && git checkout tags/21.03.05
 
 libfmod_SDL.so: FMOD_SDL
-	@[ -d fmodstudioapi20202linux ] || { echo -e "\nERROR: fmodstudioapi20202linux is missing. See README.md for details.\n"; exit 1; }
+	@[ -d fmodstudioapi20202linux ] || { echo -e "\nERROR: fmodstudioapi20202linux is missing. See the otherlibs README.md for details.\n"; exit 1; }
 	cp fmodstudioapi20202linux/api/core/inc/* FMOD_SDL/
 	cp fmodstudioapi20202linux/api/core/lib/arm64/* FMOD_SDL/
 	cp fmodstudioapi20202linux/api/studio/inc/* FMOD_SDL/

@@ -9,9 +9,9 @@ Celeste uses FMOD for playing audio. This folder contains patches that make FMOD
 make sound
 ```
 
-2. Patch `Celeste.exe` to change the expected header version. This fixes the ERR_HEADER_MISMATCH error.
+2. Patch `Celeste.exe` to change the expected header version. This fixes the ERR_HEADER_MISMATCH error. `Celeste.exe` will be backed up as `Celeste.exe.bak` if it wasn't backed up before and then patched.
 ```
-TODO
+./patch_celeste.sh /path/to/Celeste.exe
 ```
 
 3. Start Celeste with this library preloaded.
