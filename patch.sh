@@ -32,6 +32,9 @@ EOF
 chmod +x "${celeste_dir}/start.sh"
 
 echo "[+] Copying libraries to Celeste directory"
+if [ -d "${celeste_dir}/lib64" ] && [ ! -d "${celeste_dir}/lib64.bak" ]; then
+	mv "${celeste_dir}/lib64" "${celeste_dir}/lib64.bak"
+fi
 mkdir -p "${celeste_dir}/lib64"
 cp -H otherlibs/*.so* otherlibs/FMOD_SDL/libfmod.so.13 otherlibs/FMOD_SDL/libfmodstudio.so.13 "${celeste_dir}/lib64/"
 cd "${celeste_dir}/lib64/"
