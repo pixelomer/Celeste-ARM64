@@ -9,6 +9,13 @@ fi
 
 set -e
 
+backup() {
+	if [ -e "$1" ] && [ ! -e "$1.bak" ]; then
+		mv "$1" "$1.bak"
+	fi
+	rm -rf "$1"
+}
+
 cd otherlibs
 echo "[+] Building libraries"
 make
@@ -33,10 +40,7 @@ EOF
 chmod +x "${celeste_dir}/start.sh"
 
 echo "[+] Copying libraries to Celeste directory"
-if [ -d "${celeste_dir}/lib64" ] && [ ! -d "${celeste_dir}/lib64.bak" ]; then
-	mv "${celeste_dir}/lib64" "${celeste_dir}/lib64.bak"
-fi
-rm -rf "${celeste_dir}/lib64"
+backup "${celeste_dir}/lib64"
 mkdir -p "${celeste_dir}/lib64"
 cp -H otherlibs/*.so* otherlibs/FMOD_SDL/libfmod.so.13 otherlibs/FMOD_SDL/libfmodstudio.so.13 "${celeste_dir}/lib64/"
 cd "${celeste_dir}/lib64/"
