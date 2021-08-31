@@ -18,12 +18,22 @@ backup() {
 }
 
 cd otherlibs
-echo "[+] Building libraries"
-make
+if [ -f Makefile ]; then
+	echo "[+] Building libraries"
+	make
+else
+	echo "[i] Missing otherlibs/Makefile, skipping"
+fi
 
 cd ../fmod
-echo "[+] Building FMOD preload"
-make sound
+skipped_fmod=0
+if [ -f Makefile ]; then
+	echo "[+] Building FMOD preload"
+	make sound
+else
+	skipped_fmod=1
+	echo "[i] Missing fmod/Makefile, skipping"
+fi
 
 cd ..
 echo "[+] Patching Celeste.exe"
@@ -44,7 +54,22 @@ chmod +x "${celeste_dir}/Celeste"
 echo "[+] Copying libraries to Celeste directory"
 backup "${celeste_dir}/lib64"
 mkdir -p "${celeste_dir}/lib64"
-cp -H otherlibs/*.so* otherlibs/FMOD_SDL/libfmod.so.13 otherlibs/FMOD_SDL/libfmodstudio.so.13 "${celeste_dir}/lib64/"
+if [ "${skipped_fmod}" -ne 1 ]; then
+	cp -H otherlibs/FMOD_SDL/libfmod.so.13 otherlibs/FMOD_SDL/libfmodstudio.so.13 "${celeste_dir}/lib64/"
+else
+	cat <<'EOF'
+
+This release does not contain fmod libraries.
+
+Download these libraries from https://fmod.com/download and copy
+the arm64 libraries libfmod.so.13 and libfmodstudio.so.13 to the
+lib64 folder in the Celeste folder.
+
+EOF
+fi
+cp -H otherlibs/*.so* "${celeste_dir}/lib64/"
 cd "${celeste_dir}/lib64/"
 ln -s libfmod.so.13 libfmod.so.10
 ln -s libfmodstudio.so.13 libfmodstudio.so.10
+
+echo "[+] Successfully patched Celeste"
