@@ -8,6 +8,7 @@ if [ "$#" -lt 1 ]; then
 fi
 
 set -e
+cd "${0%/*}"
 
 backup() {
 	if [ -e "$1" ] && [ ! -e "$1.bak" ]; then
