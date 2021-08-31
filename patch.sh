@@ -32,6 +32,7 @@ celeste_dir="$(dirname "$1")"
 
 echo "[+] Creating launch script"
 backup "${celeste_dir}/Celeste"
+cp fmod/sound/fmod_preload.so "${celeste_dir}/fmod_preload.so"
 cat > "${celeste_dir}/Celeste" <<'EOF'
 #!/usr/bin/env bash
 cd "${0%/*}"
