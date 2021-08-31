@@ -30,14 +30,14 @@ echo "[+] Patching Celeste.exe"
 
 celeste_dir="$(dirname "$1")"
 
-echo "[+] Creating start.sh"
-cp fmod/sound/fmod_preload.so "${celeste_dir}/"
-cat > "${celeste_dir}/start.sh" <<'EOF'
+echo "[+] Creating launch script"
+backup "${celeste_dir}/Celeste"
+cat > "${celeste_dir}/Celeste" <<'EOF'
 #!/usr/bin/env bash
 cd "${0%/*}"
 LD_PRELOAD="$(pwd)/fmod_preload.so" LD_LIBRARY_PATH="$(pwd)/lib64" mono Celeste.exe
 EOF
-chmod +x "${celeste_dir}/start.sh"
+chmod +x "${celeste_dir}/Celeste"
 
 echo "[+] Copying libraries to Celeste directory"
 backup "${celeste_dir}/lib64"
