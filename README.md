@@ -15,7 +15,8 @@ sudo apt update
 sudo apt install libsdl2-dev mono-complete
 
 # Download prebuilt Celeste patcher
-wget https://github.com/pixelomer/Celeste-ARM64/releases/download/2021.08.31/Celeste-ARM64-prebuilt.zip
+cd ~
+wget https://github.com/pixelomer/Celeste-ARM64/releases/download/2021.09.02/Celeste-ARM64-prebuilt.zip
 unzip Celeste-ARM64-prebuilt.zip
 
 # Patch Celeste and add arm64 libraries
@@ -25,6 +26,24 @@ cd Celeste-ARM64-prebuilt
 # Copy FMOD libraries
 cp ~/fmodstudioapi20202linux/api/studio/lib/arm64/libfmodstudio.so.13.2 ~/Celeste/lib64/libfmodstudio.so.13
 cp ~/fmodstudioapi20202linux/api/core/lib/arm64/libfmod.so.13.2 ~/Celeste/lib64/libfmod.so.13
+
+# (Optional) Install Olympus
+cd ~
+sudo apt install libcurl3
+wget https://github.com/pixelomer/Celeste-ARM64/releases/download/2021.09.02/Olympus.zip
+unzip Olympus.zip
+cd Olympus
+mkdir -p ~/.config/Olympus
+cat > ~/.config/Olympus/config.json <<'EOF'
+{
+	"installs":[{
+		"type":"manual",
+		"name":"Celeste",
+		"path":"/path/to/Celeste"
+	}]
+}
+EOF
+./install.sh
 
 # Start Celeste
 cd ~/Celeste
