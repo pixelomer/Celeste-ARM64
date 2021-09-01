@@ -6,7 +6,6 @@ This repository contains utilities for getting Celeste to work on ARM64 Linux. T
 
 ```sh
 # Example installation
-# - Celeste at ~/Celeste
 # - FMOD libraries at ~/fmodstudioapi20202linux
 # - Mono is installed (see https://www.mono-project.com/download/stable/#download-lin)
 
@@ -21,15 +20,16 @@ unzip Celeste-ARM64-prebuilt.zip
 
 # Patch Celeste and add arm64 libraries
 cd Celeste-ARM64-prebuilt
-./patch.sh ~/Celeste/Celeste.exe
+./patch.sh /path/to/Celeste/Celeste.exe
 
 # Copy FMOD libraries
-cp ~/fmodstudioapi20202linux/api/studio/lib/arm64/libfmodstudio.so.13.2 ~/Celeste/lib64/libfmodstudio.so.13
-cp ~/fmodstudioapi20202linux/api/core/lib/arm64/libfmod.so.13.2 ~/Celeste/lib64/libfmod.so.13
+cp ~/fmodstudioapi20202linux/api/studio/lib/arm64/libfmodstudio.so.13.2 /path/to/Celeste/lib64/libfmodstudio.so.13
+cp ~/fmodstudioapi20202linux/api/core/lib/arm64/libfmod.so.13.2 /path/to/Celeste/lib64/libfmod.so.13
 
 # (Optional) Install Olympus
 cd ~
-sudo apt install libcurl3
+sudo apt install libcurl3 liblua5.3
+ln -s /usr/lib/aarch64-linux-gnu/liblua5.3.so /path/to/Celeste/lib64/liblua53.so
 wget https://github.com/pixelomer/Celeste-ARM64/releases/download/2021.09.02/Olympus.zip
 unzip Olympus.zip
 cd Olympus
@@ -46,7 +46,7 @@ EOF
 ./install.sh
 
 # Start Celeste
-cd ~/Celeste
+cd /path/to/Celeste
 ./Celeste
 ```
 
