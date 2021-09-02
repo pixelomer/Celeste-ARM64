@@ -46,11 +46,11 @@ cd Olympus
 mkdir -p ~/.config/Olympus
 cat > ~/.config/Olympus/config.json <<'EOF'
 {
-	"installs":[{
-		"type":"manual",
-		"name":"Celeste",
-		"path":"/path/to/Celeste"
-	}]
+  "installs":[{
+    "type":"manual",
+    "name":"Celeste",
+    "path":"/path/to/Celeste"
+  }]
 }
 EOF
 ./install.sh
