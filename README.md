@@ -57,8 +57,10 @@ EOF
 ```
 
 6. You can now start Celeste by running the `Celeste` script in the Celeste folder.
+```sh
 cd /path/to/Celeste
 ./Celeste
+```
 
 ## Files
 
