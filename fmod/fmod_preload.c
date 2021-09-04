@@ -26,6 +26,9 @@ void *dlsym(void *handle, const char *name) {
 		if (strcmp(name, "FMOD_Studio_System_GetLowLevelSystem") == 0) {
 			return dlsym_real(handle, "FMOD_Studio_System_GetCoreSystem");
 		}
+		else if (strcmp(name, "FMOD_Studio_EventInstance_TriggerCue") == 0) {
+			return dlsym_real(handle, "FMOD_Studio_EventInstance_KeyOff");
+		}
 		else if (strcmp(name, "FMOD_Studio_EventInstance_SetParameterValue") == 0) {
 			return FMOD_Studio_EventInstance_SetParameterValue;
 		}
