@@ -21,7 +21,6 @@ void *dlsym(void *handle, const char *name) {
 	if (dlsym_real == NULL) {
 		dlsym_real = _dl_sym(RTLD_NEXT, "dlsym", dlsym);
 	}
-	//printf("dlsym(%p, \"%s\")\n", handle, name);
 	fflush(stdout);
 	if (name != NULL) {
 		if (strcmp(name, "FMOD_Studio_System_GetLowLevelSystem") == 0) {
@@ -42,7 +41,6 @@ void *dlopen(const char *filename, int flags) {
 	if (dlopen_real == NULL) {
 		dlopen_real = dlsym(RTLD_NEXT, "dlopen");
 	}
-	//printf("dlopen(\"%s\", %d)", filename, flags);
 	void *result = dlopen_real(filename, flags);
 	if (((fmodstudio == NULL) || (fmod == NULL)) && (result != NULL) && (filename != NULL)) {
 		char filename_copy[strlen(filename)+1];
