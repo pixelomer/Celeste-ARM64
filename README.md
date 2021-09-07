@@ -19,7 +19,7 @@ sudo apt install libsdl2-dev mono-complete
 2. Download the Celeste patcher with prebuilt binaries.
 ```sh
 cd ~
-wget https://github.com/pixelomer/Celeste-ARM64/releases/download/2021.09.02/Celeste-ARM64-prebuilt.zip
+wget https://github.com/pixelomer/Celeste-ARM64/releases/download/2021.09.07/Celeste-ARM64-prebuilt.zip
 unzip Celeste-ARM64-prebuilt.zip
 ```
 
@@ -40,7 +40,7 @@ cp ~/fmodstudioapi20202linux/api/core/lib/arm64/libfmod.so.13.2 /path/to/Celeste
 cd ~
 sudo apt install libcurl3 liblua5.3
 ln -s /usr/lib/aarch64-linux-gnu/liblua5.3.so /path/to/Celeste/lib64/liblua53.so
-wget https://github.com/pixelomer/Celeste-ARM64/releases/download/2021.09.02/Olympus.zip
+wget https://github.com/pixelomer/Celeste-ARM64/releases/download/2021.09.07/Olympus.zip
 unzip Olympus.zip
 cd Olympus
 mkdir -p ~/.config/Olympus
