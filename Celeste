@@ -36,7 +36,7 @@ type mono 2>/dev/null >&2 || {
 	mv Olympus ~/.olympus
 	rm Olympus.zip
 	popd
-	pushd ~/olympus
+	pushd ~/.olympus
 	sed 's/read/answer\=y\;\#/g' < ./install.sh > install-nocheck.sh
 	chmod +x install-nocheck.sh
 	./install-nocheck.sh
