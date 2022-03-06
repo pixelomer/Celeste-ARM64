@@ -10,12 +10,12 @@ This repository contains utilities for getting Celeste to work on ARM64 Linux. T
 
 1. Download the Linux version of Celeste [from itch.io](https://mattmakesgames.itch.io/celeste) to your computer. You have to use this version of the game because the Steam version contains DRM.
 2. Download the latest release of Celeste-ARM64 and extract it.
-3. (optional) Install Everest in this copy of Celeste with Olympus.
-4. Run the following commands in a terminal.
+3. Run the following commands in a terminal.
 ```bash
 cd /path/to/Celeste-ARM64
 ./patch.sh /path/to/celeste-linux/Celeste.exe
 ```
+4. \(optional\) Install Everest in this copy of Celeste with Olympus.
 5. Copy the Celeste folder to your Switch.
 6. Run the following commands in a terminal on your Switch. You may be required to enter your password. After running this command, the installation will be complete and Celeste will start.
 ```bash
