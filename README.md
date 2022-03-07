@@ -8,7 +8,7 @@ This repository contains utilities for getting Celeste to work on ARM64 Linux. T
 
 **Warning:** You must follow these instructions in the order they are presented.
 
-1. Download the Linux version of Celeste [from itch.io](https://mattmakesgames.itch.io/celeste) to your computer. You have to use this version of the game because the Steam version contains DRM.
+1. Download the Linux version of Celeste [from itch.io](https://mattmakesgames.itch.io/celeste) or [from Epic Games Store](https://www.epicgames.com/store/en-US/p/celeste) to your computer. You have to use one of these versions of the game because the Steam version contains DRM.
 2. Download the latest release of Celeste-ARM64 and extract it.
 3. Run the following commands in a terminal.
 ```bash
