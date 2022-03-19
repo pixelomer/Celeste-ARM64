@@ -4,8 +4,8 @@
 #include <dlfcn.h>
 #include <string.h>
 
-static void *fmodstudio;
-static void *fmod;
+static void *fmodstudio = NULL;
+static void *fmod = NULL;
 
 static int FMOD_Studio_EventInstance_SetParameterValue(void *system, const char *name, float value) {
 	static int (*SetParameterByName)(void *, const char *, float, int ignoreseekspeed /* ?? */);
@@ -21,7 +21,6 @@ void *dlsym(void *handle, const char *name) {
 	if (dlsym_real == NULL) {
 		dlsym_real = _dl_sym(RTLD_NEXT, "dlsym", dlsym);
 	}
-	fflush(stdout);
 	if (name != NULL) {
 		if (strcmp(name, "FMOD_Studio_System_GetLowLevelSystem") == 0) {
 			return dlsym_real(handle, "FMOD_Studio_System_GetCoreSystem");
@@ -44,17 +43,26 @@ void *dlopen(const char *filename, int flags) {
 	if (dlopen_real == NULL) {
 		dlopen_real = dlsym(RTLD_NEXT, "dlopen");
 	}
-	void *result = dlopen_real(filename, flags);
-	if (((fmodstudio == NULL) || (fmod == NULL)) && (result != NULL) && (filename != NULL)) {
+	if (filename != NULL) {
+		void **target_pt = NULL;
 		char filename_copy[strlen(filename)+1];
 		strcpy(filename_copy, filename);
 		char *name = basename(filename_copy);
-		if (strcmp(name, "libfmodstudio.so.10") == 0) {
-			fmodstudio = result;
+		if (strncmp(name, "libfmodstudio.so.10", 19) == 0) {
+			filename = "libfmodstudio.so.13";
+			target_pt = &fmodstudio;
 		}
-		else if (strcmp(name, "libfmod.so.10") == 0) {
-			fmod = result;
+		else if (strncmp(name, "libfmod.so.10", 13) == 0) {
+			filename = "libfmod.so.13";
+			target_pt = &fmod;
 		}
+		void *result = dlopen_real(filename, flags);
+		if ((target_pt != NULL) && (*target_pt == NULL) && (result != NULL)) {
+			*target_pt = result;
+		}
+		return result;
 	}
-	return result;
+	else {
+		return dlopen_real(filename, flags);
+	}
 }
