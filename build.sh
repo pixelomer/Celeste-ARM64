@@ -22,7 +22,7 @@ type sudo 2>/dev/null >&2 || { sudo() { "${@}"; }; }
 
 echo "Ensuring dependencies..."
 sudo apt-get update
-sudo apt install -y cmake make libsdl2-dev sudo gcc git curl jq
+sudo apt install -y cmake make libsdl2-dev sudo gcc git curl jq sed
 
 cd fmod
 make

@@ -8,4 +8,5 @@ RUN apt-get install -y gcc
 RUN apt-get install -y git
 RUN apt-get install -y curl
 RUN apt-get install -y jq
+RUN apt-get install -y sed
 RUN git config --global core.fscache false
