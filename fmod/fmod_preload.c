@@ -10,7 +10,7 @@ static void *fmod;
 static int FMOD_Studio_EventInstance_SetParameterValue(void *system, const char *name, float value) {
 	static int (*SetParameterByName)(void *, const char *, float, int ignoreseekspeed /* ?? */);
 	if (SetParameterByName == NULL) {
-		SetParameterByName = dlsym(fmodstudio, "FMOD_Studio_System_SetParameterByName");
+		SetParameterByName = dlsym(fmodstudio, "FMOD_Studio_EventInstance_SetParameterByName");
 	}
 	return SetParameterByName(system, name, value, 0);
 }
