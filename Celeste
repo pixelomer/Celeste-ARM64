@@ -22,7 +22,10 @@ type mono 2>/dev/null >&2 || {
 	echo "liblua is missing, it will be installed"
 	sudo apt update
 	sudo apt install -y liblua5.3 libcurl3
-	ln -s /usr/lib/aarch64-linux-gnu/liblua5.3.so lib64/liblua53.so
+}
+
+[ -e "lib-arm64/liblua53.so" ] || {
+	ln -s /usr/lib/aarch64-linux-gnu/liblua5.3.so lib-arm64/liblua53.so
 }
 
 [ -f ~/.config/Olympus/config.json -o -d ~/.olympus ] || {
@@ -54,8 +57,7 @@ EOF
 	popd
 }
 
-if [ ! -f "${APPSDIR}/Celeste.desktop" ]; then
-	cat > "${APPSDIR}/Celeste.desktop" <<EOF
+cat > "${APPSDIR}/Celeste.desktop" <<EOF
 [Desktop Entry]
 Type=Application
 Version=1.0
@@ -66,13 +68,8 @@ Icon=$(pwd)/Celeste.png
 Terminal=false
 Categories=Game;Application;
 EOF
-	update-desktop-database "${APPSDIR}"
-fi
+update-desktop-database "${APPSDIR}"
 
 rm -f System*.dll mscorlib.dll Mono.Posix.dll Mono.Security.dll monoconfig monomachineconfig
-cd lib64
-ln -s libfmod.so.10 libfmod.so.13 2>/dev/null >&2
-ln -s libfmodstudio.so.10 libfmodstudio.so.13 2>/dev/null >&2
-cd ..
 
-LD_PRELOAD="$(pwd)/fmod_preload.so" LD_LIBRARY_PATH="$(pwd)/lib64" mono Celeste.exe
+LD_PRELOAD="$(pwd)/fmod_preload.so" LD_LIBRARY_PATH="$(pwd)/lib-arm64" mono Celeste.exe

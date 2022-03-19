@@ -7,6 +7,11 @@ if [ "$#" -lt 1 ]; then
 	exit 1
 fi
 
+if [ "$(basename "$1")" != "Celeste.exe" ]; then
+	echo "Specified file is not Celeste.exe."
+	exit 1
+fi
+
 set -e
 cd "${0%/*}"
 
@@ -49,11 +54,11 @@ echo "[+] Downloading libfmod"
 ./download-fmod.sh
 
 echo "[+] Copying libraries to Celeste directory"
-backup "${celeste_dir}/lib64"
-mkdir -p "${celeste_dir}/lib64"
-cp -H otherlibs/fmodstudioapi20202linux/api/studio/lib/arm64/libfmodstudio.so.13.2 "${celeste_dir}/lib64/libfmodstudio.so.10"
-cp -H otherlibs/fmodstudioapi20202linux/api/core/lib/arm64/libfmod.so.13.2 "${celeste_dir}/lib64/libfmod.so.10"
-cp -H otherlibs/*.so* "${celeste_dir}/lib64/"
-cd "${celeste_dir}/lib64/"
+backup "${celeste_dir}/lib-arm64"
+mkdir -p "${celeste_dir}/lib-arm64"
+cp -H otherlibs/fmodstudioapi20206linux/api/studio/lib/arm64/libfmodstudio.so.13.6 "${celeste_dir}/lib-arm64/libfmodstudio.so.13.6"
+cp -H otherlibs/fmodstudioapi20206linux/api/core/lib/arm64/libfmod.so.13.6 "${celeste_dir}/lib-arm64/libfmod.so.13.6"
+cp -H otherlibs/*.so* "${celeste_dir}/lib-arm64/"
+cd "${celeste_dir}/lib-arm64/"
 
 echo "[+] Successfully patched Celeste"

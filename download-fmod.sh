@@ -2,7 +2,7 @@
 
 set -e
 
-if [ -d "otherlibs/fmodstudioapi20202linux" ]; then
+if [ -d "otherlibs/fmodstudioapi20206linux" ]; then
 	echo "FMOD libraries are already available."
 	exit 0
 fi
@@ -102,19 +102,19 @@ echo "${user_id}"
 
 # Get download link
 echo "Requesting download..."
-download_link="$(curl -s "https://www.fmod.com/api-get-download-link?path=files/fmodstudio/api/Linux/&filename=fmodstudioapi20202linux.tar.gz&user_id=${user_id}" \
+download_link="$(curl -s "https://www.fmod.com/api-get-download-link?path=files/fmodstudio/api/Linux/&filename=fmodstudioapi20206linux.tar.gz&user_id=${user_id}" \
 	-H "Authorization: FMOD ${auth_token}" \
 	-H "Referer: https://www.fmod.com/download" | jq -r '.url')"
 
 # Download the library
 curl \
 	-H "Referer: https://www.fmod.com/" \
-	-Lo otherlibs/fmodstudioapi20202linux.tar.gz \
+	-Lo otherlibs/fmodstudioapi20206linux.tar.gz \
 	"${download_link}"
 
 # Finally.
 printf "Extracting archive... "
 cd otherlibs
-rm -rf fmodstudioapi20202linux
-tar -xzf fmodstudioapi20202linux.tar.gz
+rm -rf fmodstudioapi20206linux
+tar -xzf fmodstudioapi20206linux.tar.gz
 echo "done!"

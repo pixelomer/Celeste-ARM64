@@ -14,7 +14,9 @@ make sound
 ./patch_celeste.sh /path/to/Celeste.exe
 ```
 
-3. Start Celeste with this library preloaded.
+3. Make sure libfmodstudio.13.6 and libfmod.13.6 are in your LD_LIBRARY_PATH.
+
+4. Start Celeste with this library preloaded.
 ```bash
 LD_PRELOAD=/path/to/fmod_preload.so mono /path/to/Celeste.exe
 ```
@@ -27,10 +29,6 @@ make nosound
 ```
 
 2. Replace the default Celeste FMOD libraries with these libraries.
-```bash
-cp nosound/libfmod.so.10 /path/to/Celeste/lib64/
-cp nosound/libfmodstudio.so.10 /path/to/Celeste/lib64/
-```
 
 3. Start Celeste.
 ```bash

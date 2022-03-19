@@ -8,16 +8,16 @@ FMOD_SDL:
 	[ -d FMOD_SDL ] || git clone https://github.com/flibitijibibo/FMOD_SDL FMOD_SDL
 	cd FMOD_SDL && git checkout tags/21.03.05
 
-fmodstudioapi20202linux:
+fmodstudioapi20206linux:
 	@echo "==> Downloading FMOD Engine..."
 	@cd ..; ./download-fmod.sh
 
-libfmod_SDL.so: fmodstudioapi20202linux FMOD_SDL libSDL2-2.0.so.0
+libfmod_SDL.so: fmodstudioapi20206linux FMOD_SDL libSDL2-2.0.so.0
 	@echo "==> Building libfmod_SDL..."
-	cp fmodstudioapi20202linux/api/core/inc/* FMOD_SDL/
-	cp fmodstudioapi20202linux/api/core/lib/arm64/* FMOD_SDL/
-	cp fmodstudioapi20202linux/api/studio/inc/* FMOD_SDL/
-	cp fmodstudioapi20202linux/api/studio/lib/arm64/* FMOD_SDL/
+	cp fmodstudioapi20206linux/api/core/inc/* FMOD_SDL/
+	cp fmodstudioapi20206linux/api/core/lib/arm64/* FMOD_SDL/
+	cp fmodstudioapi20206linux/api/studio/inc/* FMOD_SDL/
+	cp fmodstudioapi20206linux/api/studio/lib/arm64/* FMOD_SDL/
 	sed 's/FMOD_VERSION = 11/FMOD_VERSION = 13/g' < FMOD_SDL/Makefile > FMOD_SDL/Makefile.1
 	sed 's/sdl2-config --cflags/\$$\$$\(pwd\)\/\.\.\/SDL\/sdl2-config --prefix="\$$\$$\(pwd\)\/\.\.\/SDL\/out" --cflags/g' < FMOD_SDL/Makefile.1 > FMOD_SDL/Makefile.2
 	mv FMOD_SDL/Makefile.2 FMOD_SDL/Makefile
@@ -29,6 +29,7 @@ FNA3D:
 	@echo "==> Downloading FNA3D..."
 	[ -d FNA3D ] || git clone https://github.com/FNA-XNA/FNA3D FNA3D
 	cd FNA3D && git checkout tags/21.08
+	cd FNA3D && sed 's/git:/https:/g' < .gitmodules > .gitmodules-new && mv .gitmodules-new .gitmodules && git submodule sync
 	cd FNA3D && git submodule update --init --recursive
 
 libFNA3D.so.0: FNA3D libSDL2-2.0.so.0
