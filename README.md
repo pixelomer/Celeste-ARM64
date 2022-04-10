@@ -2,6 +2,8 @@
 
 This repository contains utilities for getting Celeste to work on ARM64 Linux. These utilities were tested on a Nintendo Switch running Ubuntu Bionic 18.04.
 
+![Photo of Glyph running on the Nintendo Switch](photo.png)
+
 ## Installation
 
 **Note:** Read all of the instructions at least once before starting.
