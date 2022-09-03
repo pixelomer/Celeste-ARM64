@@ -6,9 +6,7 @@ This repository contains utilities for getting Celeste to work on ARM64 Linux. T
 
 ## Installation
 
-**Note:** Read all of the instructions at least once before starting.
-
-**Warning:** You must follow these instructions in the order they are presented.
+> Read all of the instructions at least once before starting.
 
 1. Download the Linux version of Celeste [from itch.io](https://mattmakesgames.itch.io/celeste) or [from Epic Games Store](https://www.epicgames.com/store/en-US/p/celeste) to your computer. You have to use one of these versions of the game because the Steam version contains DRM.
 2. Download the latest release of Celeste-ARM64 and extract it.
@@ -34,7 +32,7 @@ Use this script to make Celeste work on ARM64.
 
 ### fmod/
 
-Contains instructions on how to get the FMOD library working. The FMOD library is used in Celeste for playing audio.
+Contains instructions on how to get the FMOD library working. The FMOD library is used in Celeste for sound.
 
 ### otherlibs/
 
