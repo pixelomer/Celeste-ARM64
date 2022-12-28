@@ -28,6 +28,11 @@ type mono 2>/dev/null >&2 || {
 	ln -s /usr/lib/aarch64-linux-gnu/liblua5.3.so lib-arm64/liblua53.so
 }
 
+[ -e "lib-arm64/libfmod.so.13" ] || {
+	ln -s libfmod.so.13.6 lib-arm64/libfmod.so.13
+	ln -s libfmodstudio.so.13.6 lib-arm64/libfmodstudio.so.13
+}
+
 [ -f ~/.config/Olympus/config.json -o -d ~/.olympus ] || {
 	echo "Olympus is missing, it will be installed"
 	sudo apt update

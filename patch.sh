@@ -59,8 +59,5 @@ mkdir -p "${celeste_dir}/lib-arm64"
 cp -H otherlibs/fmodstudioapi20206linux/api/studio/lib/arm64/libfmodstudio.so.13.6 "${celeste_dir}/lib-arm64/libfmodstudio.so.13.6"
 cp -H otherlibs/fmodstudioapi20206linux/api/core/lib/arm64/libfmod.so.13.6 "${celeste_dir}/lib-arm64/libfmod.so.13.6"
 cp -H otherlibs/*.so* "${celeste_dir}/lib-arm64/"
-cd "${celeste_dir}/lib-arm64/"
-ln -s libfmodstudio.so.13.6 libfmodstudio.so.13
-ln -s libfmod.so.13.6 libfmod.so.13
 
 echo "[+] Successfully patched Celeste"
