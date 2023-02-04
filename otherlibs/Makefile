@@ -6,7 +6,7 @@ clean:
 FMOD_SDL:
 	@echo "==> Downloading FMOD_SDL..."
 	[ -d FMOD_SDL ] || git clone https://github.com/flibitijibibo/FMOD_SDL FMOD_SDL
-	cd FMOD_SDL && git checkout tags/21.03.05
+	cd FMOD_SDL && git checkout tags/22.06.16
 
 fmodstudioapi20206linux:
 	@echo "==> Downloading FMOD Engine..."
@@ -18,17 +18,15 @@ libfmod_SDL.so: fmodstudioapi20206linux FMOD_SDL libSDL2-2.0.so.0
 	cp fmodstudioapi20206linux/api/core/lib/arm64/* FMOD_SDL/
 	cp fmodstudioapi20206linux/api/studio/inc/* FMOD_SDL/
 	cp fmodstudioapi20206linux/api/studio/lib/arm64/* FMOD_SDL/
-	sed 's/FMOD_VERSION = 11/FMOD_VERSION = 13/g' < FMOD_SDL/Makefile > FMOD_SDL/Makefile.1
-	sed 's/sdl2-config --cflags/\$$\$$\(pwd\)\/\.\.\/SDL\/sdl2-config --prefix="\$$\$$\(pwd\)\/\.\.\/SDL\/out" --cflags/g' < FMOD_SDL/Makefile.1 > FMOD_SDL/Makefile.2
-	mv FMOD_SDL/Makefile.2 FMOD_SDL/Makefile
-	rm FMOD_SDL/Makefile.1
+	sed 's/sdl2-config --cflags/\$$\$$\(pwd\)\/\.\.\/SDL\/sdl2-config --prefix="\$$\$$\(pwd\)\/\.\.\/SDL\/out" --cflags/g' < FMOD_SDL/Makefile > FMOD_SDL/Makefile.1
+	mv FMOD_SDL/Makefile.1 FMOD_SDL/Makefile
 	cd FMOD_SDL && make -j4
 	cp FMOD_SDL/libfmod_SDL.so ./
 
 FNA3D:
 	@echo "==> Downloading FNA3D..."
 	[ -d FNA3D ] || git clone https://github.com/FNA-XNA/FNA3D FNA3D
-	cd FNA3D && git checkout tags/21.08
+	cd FNA3D && git checkout tags/23.02
 	cd FNA3D && sed 's/git:/https:/g' < .gitmodules > .gitmodules-new && mv .gitmodules-new .gitmodules && git submodule sync
 	cd FNA3D && git submodule update --init --recursive
 
@@ -41,7 +39,7 @@ libFNA3D.so.0: FNA3D libSDL2-2.0.so.0
 SDL:
 	@echo "==> Downloading SDL2..."
 	[ -d SDL ] || git clone https://github.com/libsdl-org/SDL SDL
-	cd SDL && git checkout tags/release-2.0.16
+	cd SDL && git checkout tags/release-2.26.2
 	cd SDL && git submodule update --init --recursive
 
 libSDL2-2.0.so.0: SDL
