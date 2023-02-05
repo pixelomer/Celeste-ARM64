@@ -8,21 +8,22 @@ This repository contains utilities for getting Celeste to work on ARM64 Linux. T
 
 > Read all of the instructions at least once before starting.
 
-1. Download the Linux version of Celeste [from itch.io](https://mattmakesgames.itch.io/celeste) or [from Epic Games Store](https://www.epicgames.com/store/en-US/p/celeste) to your computer. You have to use one of these versions of the game because the Steam version contains DRM.
-2. Download the latest release of Celeste-ARM64 and extract it.
-3. Run the following commands in a terminal.
+1. Download Celeste from either [itch.io](https://mattmakesgames.itch.io/celeste) or [Epic Games Store](https://www.epicgames.com/store/en-US/p/celeste). Both Linux and Windows builds will work. The builds on Steam will **not** work because the Steam version of the game contains DRM.
+2. Extract Celeste.
+3. Download the latest release of Celeste-ARM64 and extract it somewhere other than the Celeste folder.
+4. Run the following commands in the terminal.
 ```bash
 cd /path/to/Celeste-ARM64
 ./patch.sh /path/to/celeste-linux/Celeste.exe
 ```
-4. \(optional\) Install Everest in this copy of Celeste with Olympus.
-5. Copy the Celeste folder to your Switch.
-6. Run the following commands in a terminal on your Switch. You may be required to enter your password. After running this command, the installation will be complete and Celeste will start.
+5. \(optional\) Install Everest on this copy of Celeste with Olympus. Do this on your computer before copying the game to your Switch since the arm64 build of Olympus is not able to to install Everest.
+6. Copy the Celeste folder to your Switch.
+7. Run the following commands in a terminal on your Switch. You may be required to enter your password. After running this command, the installation will be complete and Celeste will start.
 ```bash
 cd /path/to/celeste-linux
 ./Celeste
 ```
-7. You should now be able to launch Olympus and Celeste using the app launcher.
+8. You should now be able to launch Olympus and Celeste using the app launcher.
 
 ## Files
 
