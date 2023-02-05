@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+PRINT_EVERYTHING=false
+
 set -e
 
 if [ -d "otherlibs/fmodstudioapi20206linux" ]; then
@@ -17,6 +19,14 @@ curl() {
 		-H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1' \
 		-H 'Accept-Language: en-US,en;q=0.5' \
 		"${@}"
+}
+
+echo_sensitive() {
+	if "${PRINT_EVERYTHING}"; then
+		echo "${@}"
+	else
+		echo "ok"
+	fi
 }
 
 printf() {
@@ -40,19 +50,19 @@ else
 	password="$(dd if=/dev/urandom bs=1 count=30 2>/dev/null | base64 | sed 's/[\/+]//g')"
 	username="${email%@*}"
 	domain="${email:$((${#username}+1))}"
-	echo "${email}"
+	echo_sensitive "${email}"
 
 	# Send sign up request
 	printf "Creating fmod.com account... "
 	register_data="\"{ \\\"username\\\":\\\"${username}\\\", \\\"password\\\":\\\"${password}\\\", \\\"company\\\":\\\"\\\", \\\"email\\\":\\\"${username}%40${domain}\\\", \\\"name\\\":\\\"${username}\\\", \\\"ml_news\\\":false, \\\"ml_release\\\":false, \\\"industry\\\":1 }\""
-	curl -s \
+	register_response="$(curl -s \
 		-X POST \
 		-H 'Referer: https://www.fmod.com/profile/register' \
 		-H 'Content-Type: text/plain;charset=UTF-8' \
 		-H 'Origin: https://www.fmod.com' \
 		-d "${register_data}" \
-		'https://www.fmod.com/api-register'
-	echo ""
+		'https://www.fmod.com/api-register')"
+	echo_sensitive "${register_response}"
 
 	# Keep checking for new mails until the registration mail arrives
 	printf "Waiting for registration email... "
@@ -64,14 +74,13 @@ else
 			break
 		fi
 	done
-	echo "${mail_id}"
+	echo_sensitive "${mail_id}"
 
 	# Get the registration key
 	printf "Getting registration key... "
 	completion_url="$(curl -s "https://www.1secmail.com/api/v1/?action=readMessage&login=${username}&domain=${domain}&id=${mail_id}" | jq -r '.body' | grep https | head -n 1)"
 	completion_key="$(printf "${completion_url}" | sed 's/.*\=//g')"
-	printf "${completion_key}" | head -c 8
-	echo " (...truncated)"
+	echo_sensitive "${completion_key}"
 
 	# Complete the registration
 	printf "Completing registration... "
@@ -98,7 +107,7 @@ auth_data="$(curl -s "https://www.fmod.com/api-login" \
 	-d "{}")"
 auth_token="$(printf "${auth_data}" | jq -r '.token')"
 user_id="$(printf "${auth_data}" | jq -r '.user')"
-echo "${user_id}"
+echo_sensitive "${user_id}"
 
 # Get download link
 echo "Requesting download..."
