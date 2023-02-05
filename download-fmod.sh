@@ -29,23 +29,19 @@ echo_sensitive() {
 	fi
 }
 
-printf() {
-	builtin printf -- "${@}"
-}
-
 mkdir -p otherlibs
 
 # Check if an account was created before
 if [ -f "fmod-login.json" ]; then
 	# Load existing account credentials from disk
-	printf "Loading credentials from disk... "
+	echo -n "Loading credentials from disk... "
 	username="$(jq -r '.username' < "fmod-login.json")"
 	password="$(jq -r '.password' < "fmod-login.json")"
 	email="$(jq -r '.email' < "fmod-login.json")"
 	echo "${email}"
 else
 	# Create temporary email
-	printf "Creating temporary email... "
+	echo -n "Creating temporary email... "
 	email="$(curl -s 'https://www.1secmail.com/api/v1/?action=genRandomMailbox' | cut -d'"' -f 2)"
 	password="$(dd if=/dev/urandom bs=1 count=30 2>/dev/null | base64 | sed 's/[\/+]//g')"
 	username="${email%@*}"
@@ -53,7 +49,7 @@ else
 	echo_sensitive "${email}"
 
 	# Send sign up request
-	printf "Creating fmod.com account... "
+	echo -n "Creating fmod.com account... "
 	register_data="\"{ \\\"username\\\":\\\"${username}\\\", \\\"password\\\":\\\"${password}\\\", \\\"company\\\":\\\"\\\", \\\"email\\\":\\\"${username}%40${domain}\\\", \\\"name\\\":\\\"${username}\\\", \\\"ml_news\\\":false, \\\"ml_release\\\":false, \\\"industry\\\":1 }\""
 	register_response="$(curl -s \
 		-X POST \
@@ -65,7 +61,7 @@ else
 	echo_sensitive "${register_response}"
 
 	# Keep checking for new mails until the registration mail arrives
-	printf "Waiting for registration email... "
+	echo -n "Waiting for registration email... "
 	while true; do
 		mail_id="$(curl -s "https://www.1secmail.com/api/v1/?action=getMessages&login=${username}&domain=${domain}" | jq -r ".[0].id")"
 		if [ "${mail_id}" = "null" ]; then
@@ -77,27 +73,27 @@ else
 	echo_sensitive "${mail_id}"
 
 	# Get the registration key
-	printf "Getting registration key... "
+	echo -n "Getting registration key... "
 	completion_url="$(curl -s "https://www.1secmail.com/api/v1/?action=readMessage&login=${username}&domain=${domain}&id=${mail_id}" | jq -r '.body' | grep https | head -n 1)"
-	completion_key="$(printf "${completion_url}" | sed 's/.*\=//g')"
+	completion_key="$(echo -n "${completion_url}" | sed 's/.*\=//g')"
 	echo_sensitive "${completion_key}"
 
 	# Complete the registration
-	printf "Completing registration... "
+	echo -n "Completing registration... "
 	fmod_status="$(curl -s "https://www.fmod.com/api-registration" \
 		-H "Referer: ${completion_url}" \
 		-H "Authorization: FMOD ${completion_key}" | jq -r '.status')"
 	echo "\"${fmod_status}\""
 
 	# Save username and password to disk
-	printf "Saving credentials... "
+	echo -n "Saving credentials... "
 	echo "{\"email\":\"${email}\",\"username\":\"${username}\",\"password\":\"${password}\"}" > fmod-login.json
 	echo "fmod-login.json"
 fi
 
 # Get auth token
-printf "Logging in... "
-basic_auth="$(printf "${username}:${password}" | base64)"
+echo -n "Logging in... "
+basic_auth="$(echo -n "${username}:${password}" | base64)"
 auth_data="$(curl -s "https://www.fmod.com/api-login" \
 	-X POST \
 	-H "Authorization: Basic ${basic_auth}" \
@@ -105,8 +101,8 @@ auth_data="$(curl -s "https://www.fmod.com/api-login" \
 	-H "Origin: https://www.fmod.com" \
 	-H "Referer: https://www.fmod.com/login" \
 	-d "{}")"
-auth_token="$(printf "${auth_data}" | jq -r '.token')"
-user_id="$(printf "${auth_data}" | jq -r '.user')"
+auth_token="$(echo -n "${auth_data}" | jq -r '.token')"
+user_id="$(echo -n "${auth_data}" | jq -r '.user')"
 echo_sensitive "${user_id}"
 
 # Get download link
@@ -122,7 +118,7 @@ curl \
 	"${download_link}"
 
 # Finally.
-printf "Extracting archive... "
+echo -n "Extracting archive... "
 cd otherlibs
 rm -rf fmodstudioapi20206linux
 tar -xzf fmodstudioapi20206linux.tar.gz
