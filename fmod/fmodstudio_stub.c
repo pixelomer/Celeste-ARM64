@@ -2,11 +2,8 @@
 
 #define stub(name) int name() { return 0; }
 
-// Old symbols
 stub(FMOD_Studio_System_GetLowLevelSystem)
 stub(FMOD_Studio_EventInstance_SetParameterValue)
-
-// New symbols
 stub(FMOD_Studio_Bank_GetBusCount)
 stub(FMOD_Studio_Bank_GetBusList)
 stub(FMOD_Studio_Bank_GetEventCount)
@@ -77,7 +74,23 @@ stub(FMOD_Studio_EventDescription_GetParameterDescriptionCount)
 stub(FMOD_Studio_EventDescription_GetParameterLabelByID)
 stub(FMOD_Studio_EventDescription_GetParameterLabelByIndex)
 stub(FMOD_Studio_EventDescription_GetParameterLabelByName)
+
 //stub(FMOD_Studio_EventDescription_GetPath)
+int FMOD_Studio_EventDescription_GetPath(void *description, char *path, int size, int *retrieved) {
+	int _retrieved;
+	if (retrieved == NULL) {
+		retrieved = &_retrieved;
+	}
+	if ((size >= 1) && (path != NULL)) {
+		path[0] = 0;
+		*retrieved = 1;
+	}
+	else {
+		*retrieved = 0;
+	}
+	return 0;
+}
+
 stub(FMOD_Studio_EventDescription_GetSampleLoadingState)
 stub(FMOD_Studio_EventDescription_GetSoundSize)
 stub(FMOD_Studio_EventDescription_GetUserData)
@@ -134,6 +147,7 @@ stub(FMOD_Studio_EventInstance_SetUserData)
 stub(FMOD_Studio_EventInstance_SetVolume)
 stub(FMOD_Studio_EventInstance_Start)
 stub(FMOD_Studio_EventInstance_Stop)
+stub(FMOD_Studio_EventInstance_TriggerCue)
 stub(FMOD_Studio_ParseID)
 stub(FMOD_Studio_System_Create)
 stub(FMOD_Studio_System_FlushCommands)
@@ -510,18 +524,3 @@ stub(_ZNK4FMOD6Studio6System7getBankEPKcPPNS0_4BankE)
 stub(_ZNK4FMOD6Studio6System7isValidEv)
 stub(_ZNK4FMOD6Studio6System8getEventEPKcPPNS0_16EventDescriptionE)
 stub(_ZNK4FMOD6Studio6System8lookupIDEPKcP9FMOD_GUID)
-
-int FMOD_Studio_EventDescription_GetPath(void *description, char *path, int size, int *retrieved) {
-	int _retrieved;
-	if (retrieved == NULL) {
-		retrieved = &_retrieved;
-	}
-	if ((size >= 1) && (path != NULL)) {
-		path[0] = 0;
-		*retrieved = 1;
-	}
-	else {
-		*retrieved = 0;
-	}
-	return 0;
-}
