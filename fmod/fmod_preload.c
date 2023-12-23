@@ -15,11 +15,11 @@ static int FMOD_Studio_EventInstance_SetParameterValue(void *system, const char 
 	return SetParameterByName(system, name, value, 0);
 }
 
-extern void *_dl_sym(void *, const char *, void *);
 void *dlsym(void *handle, const char *name) {
 	static void *(*dlsym_real)(void *, const char *);
 	if (dlsym_real == NULL) {
-		dlsym_real = _dl_sym(RTLD_NEXT, "dlsym", dlsym);
+		dlsym_real = dlvsym(handle, "dlsym", "GLIBC_2.17" /* aarch64 only! */);
+		dlsym_real = dlsym_real(RTLD_NEXT, "dlsym"); // play nice with other hooks
 	}
 	if (name != NULL) {
 		if (strcmp(name, "FMOD_Studio_System_GetLowLevelSystem") == 0) {
