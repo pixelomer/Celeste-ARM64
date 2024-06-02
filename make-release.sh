@@ -14,7 +14,7 @@ echo "[+] Building everything"
 echo "[+] Copying binaries"
 cd Celeste-ARM64-prebuilt
 mkdir -p fmod
-cp -vr ../fmod/patch_celeste.sh ../fmod/sound ../fmod/nosound fmod/
+cp -vr ../fmod/sound ../fmod/nosound fmod/
 mkdir -p otherlibs
 cp -v ../otherlibs/libFNA3D.so.0 ../otherlibs/libSDL2-2.0.so.0 ../otherlibs/libfmod_SDL.so otherlibs/
 

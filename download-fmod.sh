@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
+LIBRARY_NAME="fmodstudioapi20222linux"
+SYMLINK_NAME="fmodstudioapi"
+
 PRINT_EVERYTHING=false
 
 set -e
 
-if [ -d "otherlibs/fmodstudioapi20206linux" ]; then
+if [ -d "otherlibs/${LIBRARY_NAME}" ]; then
 	echo "FMOD libraries are already available."
+	[ -L "otherlibs/${SYMLINK_NAME}" -o -e "otherlibs/${SYMLINK_NAME}" ] && rm "otherlibs/${SYMLINK_NAME}"
+	ln -s "${LIBRARY_NAME}" "otherlibs/${SYMLINK_NAME}"
 	exit 0
 fi
 
@@ -107,19 +112,30 @@ echo_sensitive "${user_id}"
 
 # Get download link
 echo "Requesting download..."
-download_link="$(curl -s "https://www.fmod.com/api-get-download-link?path=files/fmodstudio/api/Linux/&filename=fmodstudioapi20206linux.tar.gz&user_id=${user_id}" \
+download_link="$(curl -s "https://www.fmod.com/api-get-download-link?path=files/fmodstudio/api/Linux/&filename=${LIBRARY_NAME}.tar.gz&user_id=${user_id}" \
 	-H "Authorization: FMOD ${auth_token}" \
 	-H "Referer: https://www.fmod.com/download" | jq -r '.url')"
 
 # Download the library
 curl \
 	-H "Referer: https://www.fmod.com/" \
-	-Lo otherlibs/fmodstudioapi20206linux.tar.gz \
+	-Lo otherlibs/${LIBRARY_NAME}.tar.gz \
 	"${download_link}"
 
-# Finally.
+# Extract the newly downloaded release
 echo -n "Extracting archive... "
 cd otherlibs
-rm -rf fmodstudioapi20206linux
-tar -xzf fmodstudioapi20206linux.tar.gz
+rm -rf "${LIBRARY_NAME}"
+tar -xzf "${LIBRARY_NAME}.tar.gz"
+if [ ! -d "${LIBRARY_NAME}" ]; then
+	# Some releases seem to contain an archive within the archive
+	tar -xzf "${LIBRARY_NAME}.tar.gz"
+fi
+if [ ! -d "${LIBRARY_NAME}" ]; then
+	echo "Error: Archive file did not produce API folder"
+	exit 1
+fi
+[ -L "${SYMLINK_NAME}" -o -e "${SYMLINK_NAME}" ] && rm "${SYMLINK_NAME}"
+ln -s "${LIBRARY_NAME}" "${SYMLINK_NAME}"
+touch "${SYMLINK_NAME}/.timestamp"
 echo "done!"

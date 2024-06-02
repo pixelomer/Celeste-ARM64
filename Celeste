@@ -77,4 +77,17 @@ update-desktop-database "${APPSDIR}"
 
 rm -f System*.dll mscorlib.dll Mono.Posix.dll Mono.Security.dll monoconfig monomachineconfig
 
-LD_PRELOAD="$(pwd)/fmod_preload.so" LD_LIBRARY_PATH="$(pwd)/lib-arm64" mono Celeste.exe
+cat > Celeste.exe.config <<'EOF'
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+	<dllmap dll="fmod" os="linux" target="lib-arm64/libfmod.so.13"/>
+	<dllmap dll="fmodstudio" os="linux" target="lib-arm64/libfmodstudio.so.13">
+		<dllentry dll="lib-arm64/fmod_fix.so" name="FMOD_Studio_EventInstance_SetParameterValue" target="_FMOD_Studio_EventInstance_SetParameterValue"/>
+		<dllentry dll="lib-arm64/fmod_fix.so" name="FMOD_Studio_System_Create" target="_FMOD_Studio_System_Create"/>
+		<dllentry dll="lib-arm64/libfmodstudio.so.13" name="FMOD_Studio_System_GetLowLevelSystem" target="FMOD_Studio_System_GetCoreSystem"/>
+		<dllentry dll="lib-arm64/libfmodstudio.so.13" name="FMOD_Studio_EventInstance_TriggerCue" target="FMOD_Studio_EventInstance_KeyOff"/>
+	</dllmap>
+</configuration>
+EOF
+
+LD_LIBRARY_PATH="$(pwd)/lib-arm64" mono Celeste.exe

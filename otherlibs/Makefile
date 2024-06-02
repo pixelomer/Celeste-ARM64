@@ -8,16 +8,16 @@ FMOD_SDL:
 	[ -d FMOD_SDL ] || git clone https://github.com/flibitijibibo/FMOD_SDL FMOD_SDL
 	cd FMOD_SDL && git checkout tags/22.06.16
 
-fmodstudioapi20206linux:
+fmodstudioapi/.timestamp:
 	@echo "==> Downloading FMOD Engine..."
 	@cd ..; ./download-fmod.sh
 
-libfmod_SDL.so: fmodstudioapi20206linux FMOD_SDL libSDL2-2.0.so.0
+libfmod_SDL.so: fmodstudioapi/.timestamp FMOD_SDL libSDL2-2.0.so.0
 	@echo "==> Building libfmod_SDL..."
-	cp fmodstudioapi20206linux/api/core/inc/* FMOD_SDL/
-	cp fmodstudioapi20206linux/api/core/lib/arm64/* FMOD_SDL/
-	cp fmodstudioapi20206linux/api/studio/inc/* FMOD_SDL/
-	cp fmodstudioapi20206linux/api/studio/lib/arm64/* FMOD_SDL/
+	cp fmodstudioapi/api/core/inc/* FMOD_SDL/
+	cp fmodstudioapi/api/core/lib/arm64/* FMOD_SDL/
+	cp fmodstudioapi/api/studio/inc/* FMOD_SDL/
+	cp fmodstudioapi/api/studio/lib/arm64/* FMOD_SDL/
 	sed 's/sdl2-config --cflags/\$$\$$\(pwd\)\/\.\.\/SDL\/sdl2-config --prefix="\$$\$$\(pwd\)\/\.\.\/SDL\/out" --cflags/g' < FMOD_SDL/Makefile > FMOD_SDL/Makefile.1
 	mv FMOD_SDL/Makefile.1 FMOD_SDL/Makefile
 	cd FMOD_SDL && make -j4

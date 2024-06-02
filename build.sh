@@ -21,8 +21,22 @@ fi
 type sudo 2>/dev/null >&2 || { sudo() { "${@}"; }; }
 
 echo "Ensuring dependencies..."
-sudo apt-get update
-sudo apt install -y cmake make libsdl2-dev sudo gcc git curl jq sed
+installed=0
+type apt-get 2>/dev/null >&2 && {
+	sudo apt-get update
+	sudo apt-get install -y cmake make libsdl2-dev sudo gcc git curl jq sed
+	installed=1
+}
+[ $installed -eq 0 ] && type dnf 2>/dev/null >&2 && {
+	sudo dnf install -y libXext-devel cmake make SDL2-devel sudo gcc git curl jq sed
+	installed=1
+}
+[ $installed -eq 0 ] && {
+	echo "Could not find a supported package manager"
+	exit 1
+}
+
+./download-fmod.sh
 
 cd fmod
 make
