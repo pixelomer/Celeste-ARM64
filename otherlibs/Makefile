@@ -26,7 +26,7 @@ libfmod_SDL.so: fmodstudioapi/.timestamp FMOD_SDL libSDL2-2.0.so.0
 FNA3D:
 	@echo "==> Downloading FNA3D..."
 	[ -d FNA3D ] || git clone https://github.com/FNA-XNA/FNA3D FNA3D
-	cd FNA3D && git checkout tags/23.02
+	cd FNA3D && git checkout tags/24.06
 	cd FNA3D && git submodule update --init --recursive
 
 libFNA3D.so.0: FNA3D libSDL2-2.0.so.0
@@ -38,7 +38,7 @@ libFNA3D.so.0: FNA3D libSDL2-2.0.so.0
 SDL:
 	@echo "==> Downloading SDL2..."
 	[ -d SDL ] || git clone https://github.com/libsdl-org/SDL SDL
-	cd SDL && git checkout tags/release-2.26.2
+	cd SDL && git checkout tags/release-2.30.3
 	cd SDL && git submodule update --init --recursive
 
 libSDL2-2.0.so.0: SDL
