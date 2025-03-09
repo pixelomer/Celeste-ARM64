@@ -45,17 +45,32 @@ if [ -f "fmod-login.json" ]; then
 	email="$(jq -r '.email' < "fmod-login.json")"
 	echo "${email}"
 else
-	# Create temporary email
-	echo -n "Creating temporary email... "
-	email="$(curl -s 'https://www.1secmail.com/api/v1/?action=genRandomMailbox' | cut -d'"' -f 2)"
+	# Pick a domain
+	echo -n "Choosing email domain... "
+	mail_domain="$(curl -s 'https://api.mail.tm/domains' | jq -r '.["hydra:member"].[0].domain')"
+	echo "${mail_domain}"
+
+	# Generate credentials
+	echo -n "Generating email... "
+	username="$(dd if=/dev/urandom bs=1 count=30 2>/dev/null | base64 | sed 's/[\/+]//g' | tr '[:upper:]' '[:lower:]')"
+	email="${username}@${mail_domain}"
 	password="$(dd if=/dev/urandom bs=1 count=30 2>/dev/null | base64 | sed 's/[\/+]//g')"
-	username="${email%@*}"
-	domain="${email:$((${#username}+1))}"
-	echo_sensitive "${email}"
+	mail_auth="{\"address\":\"${email}\",\"password\":\"${password}\"}"
+	echo "${email}"
+
+	# Register api.mail.tm account
+	echo -n "Registering api.mail.tm account... "
+	mail_id="$(curl -s -H 'Content-Type: application/json' -d "${mail_auth}" -X POST 'https://api.mail.tm/accounts' | jq -r '.["id"]')"
+	echo_sensitive "${mail_id}"
+
+	# Authenticate with api.mail.tm
+	echo -n "Authenticating with api.mail.tm... "
+	mail_token="$(curl -s -H 'Content-Type: application/json' -d "${mail_auth}" -X POST 'https://api.mail.tm/token' | jq -r '.["token"]')"
+	echo_sensitive "${mail_token}"
 
 	# Send sign up request
 	echo -n "Creating fmod.com account... "
-	register_data="\"{ \\\"username\\\":\\\"${username}\\\", \\\"password\\\":\\\"${password}\\\", \\\"company\\\":\\\"\\\", \\\"email\\\":\\\"${username}%40${domain}\\\", \\\"name\\\":\\\"${username}\\\", \\\"ml_news\\\":false, \\\"ml_release\\\":false, \\\"industry\\\":1 }\""
+	register_data="\"{ \\\"username\\\":\\\"${username}\\\", \\\"password\\\":\\\"${password}\\\", \\\"company\\\":\\\"\\\", \\\"email\\\":\\\"${username}%40${mail_domain}\\\", \\\"name\\\":\\\"${username}\\\", \\\"ml_news\\\":false, \\\"ml_release\\\":false, \\\"industry\\\":1 }\""
 	register_response="$(curl -s \
 		-X POST \
 		-H 'Referer: https://www.fmod.com/profile/register' \
@@ -68,7 +83,7 @@ else
 	# Keep checking for new mails until the registration mail arrives
 	echo -n "Waiting for registration email... "
 	while true; do
-		mail_id="$(curl -s "https://www.1secmail.com/api/v1/?action=getMessages&login=${username}&domain=${domain}" | jq -r ".[0].id")"
+		mail_id="$(curl -s -H "Authorization: Bearer ${mail_token}" 'https://api.mail.tm/messages' | jq -r '.["hydra:member"].[0].id')"
 		if [ "${mail_id}" = "null" ]; then
 			sleep 3
 		else
@@ -79,7 +94,7 @@ else
 
 	# Get the registration key
 	echo -n "Getting registration key... "
-	completion_url="$(curl -s "https://www.1secmail.com/api/v1/?action=readMessage&login=${username}&domain=${domain}&id=${mail_id}" | jq -r '.body' | grep https | head -n 1)"
+	completion_url="$(curl -s -H "Authorization: Bearer ${mail_token}" "https://api.mail.tm/messages/${mail_id}" | jq -r '.text' | grep https | head -n1)"
 	completion_key="$(echo -n "${completion_url}" | sed 's/.*\=//g')"
 	echo_sensitive "${completion_key}"
 
@@ -98,10 +113,9 @@ fi
 
 # Get auth token
 echo -n "Logging in... "
-basic_auth="$(echo -n "${username}:${password}" | base64)"
 auth_data="$(curl -s "https://www.fmod.com/api-login" \
 	-X POST \
-	-H "Authorization: Basic ${basic_auth}" \
+	--user "${username}:${password}" \
 	-H "Content-Type: text/plain;charset=UTF-8" \
 	-H "Origin: https://www.fmod.com" \
 	-H "Referer: https://www.fmod.com/login" \
