@@ -1,0 +1,44 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner: [ ubuntu-24.04-arm, ubuntu-22.04-arm ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Restore cached FMOD
+        id: restore-fmod
+        uses: actions/cache/restore@v3
+        with:
+          path: otherlibs/fmodstudioapi20222linux
+          key: fmodstudioapi20222linux
+      - name: Symlink cached FMOD
+        run: |
+          if [ -d "otherlibs/fmodstudioapi20222linux" ]; then
+            ln -s fmodstudioapi20222linux otherlibs/fmodstudioapi
+          fi
+      - name: Build
+        run: |
+          ./make-release.sh
+      - name: Archive build
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.runner }}64
+          path: Celeste-ARM64-prebuilt
+          retention-days: 1
+      - name: Cache FMOD
+        if: steps.restore-fmod.outputs.cache-hit != 'true' && matrix.runner == 'ubuntu-24.04-arm'
+        uses: actions/cache/save@v3
+        with:
+          path: otherlibs/fmodstudioapi20222linux
+          key: fmodstudioapi20222linux
