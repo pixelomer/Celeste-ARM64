@@ -1,0 +1,34 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Cache FMOD
+        id: cache-fmod
+        uses: actions/cache@v4
+        with:
+          path: otherlibs/fmodstudioapi20222linux
+          key: fmodstudioapi20222linux
+      - name: Symlink cached FMOD
+        if: steps.cache-fmod.outputs.cache-hit == 'true'
+        run: |
+          ln -s fmodstudioapi20222linux otherlibs/fmodstudioapi
+      - name: Build
+        run: |
+          ./make-release.sh
+      - name: Archive build
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-arm64
+          path: Celeste-ARM64-prebuilt
+          retention-days: 1

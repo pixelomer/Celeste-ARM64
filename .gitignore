@@ -17,3 +17,6 @@
 !patch.sh
 !photo.png
 !README.md
+!.github/
+!.github/workflows/
+!.github/workflows/build.yaml
