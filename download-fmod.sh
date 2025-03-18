@@ -48,7 +48,7 @@ else
 	# Pick a domain
 	echo -n "Choosing email domain... "
 	mail_domain="$(curl -s 'https://api.mail.tm/domains' | jq -r '.["hydra:member"].[0].domain')"
-	echo "${mail_domain}"
+	echo_sensitive "${mail_domain}"
 
 	# Generate credentials
 	echo -n "Generating email... "
@@ -56,7 +56,7 @@ else
 	email="${username}@${mail_domain}"
 	password="$(dd if=/dev/urandom bs=1 count=30 2>/dev/null | base64 | sed 's/[\/+]//g')"
 	mail_auth="{\"address\":\"${email}\",\"password\":\"${password}\"}"
-	echo "${email}"
+	echo_sensitive "${email}"
 
 	# Register api.mail.tm account
 	echo -n "Registering api.mail.tm account... "
