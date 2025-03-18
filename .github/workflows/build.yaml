@@ -3,7 +3,7 @@ name: Build
 on:
   push:
     branches:
-      - main
+      - feature/github-actions
 
 jobs:
   build-linux:
