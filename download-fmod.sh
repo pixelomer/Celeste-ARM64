@@ -47,7 +47,7 @@ if [ -f "fmod-login.json" ]; then
 else
 	# Pick a domain
 	echo -n "Choosing email domain... "
-	mail_domain="$(curl -s 'https://api.mail.tm/domains' | jq -r '.["hydra:member"].[0].domain')"
+	mail_domain="$(curl -s 'https://api.mail.tm/domains' | jq -r '."hydra:member"[0].domain')"
 	echo_sensitive "${mail_domain}"
 
 	# Generate credentials
@@ -60,12 +60,12 @@ else
 
 	# Register api.mail.tm account
 	echo -n "Registering api.mail.tm account... "
-	mail_id="$(curl -s -H 'Content-Type: application/json' -d "${mail_auth}" -X POST 'https://api.mail.tm/accounts' | jq -r '.["id"]')"
+	mail_id="$(curl -s -H 'Content-Type: application/json' -d "${mail_auth}" -X POST 'https://api.mail.tm/accounts' | jq -r '.id')"
 	echo_sensitive "${mail_id}"
 
 	# Authenticate with api.mail.tm
 	echo -n "Authenticating with api.mail.tm... "
-	mail_token="$(curl -s -H 'Content-Type: application/json' -d "${mail_auth}" -X POST 'https://api.mail.tm/token' | jq -r '.["token"]')"
+	mail_token="$(curl -s -H 'Content-Type: application/json' -d "${mail_auth}" -X POST 'https://api.mail.tm/token' | jq -r '.token')"
 	echo_sensitive "${mail_token}"
 
 	# Send sign up request
@@ -83,7 +83,7 @@ else
 	# Keep checking for new mails until the registration mail arrives
 	echo -n "Waiting for registration email... "
 	while true; do
-		mail_id="$(curl -s -H "Authorization: Bearer ${mail_token}" 'https://api.mail.tm/messages' | jq -r '.["hydra:member"].[0].id')"
+		mail_id="$(curl -s -H "Authorization: Bearer ${mail_token}" 'https://api.mail.tm/messages' | jq -r '."hydra:member"[0].id')"
 		if [ "${mail_id}" = "null" ]; then
 			sleep 3
 		else
