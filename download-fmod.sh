@@ -5,6 +5,16 @@ SYMLINK_NAME="fmodstudioapi"
 
 PRINT_EVERYTHING=false
 
+type curl 2>/dev/null >&2 || {
+	echo "[-] curl is not installed" >&2
+	exit 1
+}
+
+type jq 2>/dev/null >&2 || {
+	echo "[-] jq is not installed" >&2
+	exit 1
+}
+
 set -e
 
 if [ -d "otherlibs/${LIBRARY_NAME}" ]; then
