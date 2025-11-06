@@ -1,4 +1,4 @@
-FROM arm64v8/ubuntu:bionic
+FROM arm64v8/ubuntu:noble
 RUN apt-get update
 RUN apt-get install -y cmake
 RUN apt-get install -y make

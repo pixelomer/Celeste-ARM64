@@ -3,8 +3,8 @@
 !docker/Dockerfile
 !fmod/
 !fmod/*.c
+!fmod/make-fmodstudio-shim.sh
 !fmod/Makefile
-!fmod/patch_celeste.sh
 !fmod/README.md
 !otherlibs/Makefile
 !otherlibs/README.md

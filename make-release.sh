@@ -16,7 +16,7 @@ cd Celeste-ARM64-prebuilt
 mkdir -p fmod
 cp -vr ../fmod/sound ../fmod/nosound fmod/
 mkdir -p otherlibs
-cp -v ../otherlibs/libFNA3D.so.0 ../otherlibs/libSDL2-2.0.so.0 ../otherlibs/libfmod_SDL.so otherlibs/
+cp -v ../otherlibs/libFNA3D.so ../otherlibs/libSDL2.so ../otherlibs/libfmod_SDL.so otherlibs/
 
 echo "[+] Copying scripts"
 cp -v ../Celeste ../make-release.sh ../patch.sh ../download-fmod.sh ./

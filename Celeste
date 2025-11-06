@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+set -e
 cd "${0%/*}"
 
 if [ -n "$XDG_DATA_HOME" ]; then
@@ -8,58 +9,29 @@ else
 	APPSDIR="$HOME/.local/share/applications"
 fi
 
-type mono 2>/dev/null >&2 || {
-	echo "Mono is missing, it will be installed"
+type dotnet 2>/dev/null >&2 || {
+	echo ".NET is missing, it will be installed"
 	sudo apt update
-	sudo apt install -y gnupg ca-certificates
-	sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-	echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
-	sudo apt update
-	sudo apt install -y mono-complete
+	sudo apt install -y dotnet8
 }
 
-[ -f "/usr/lib/aarch64-linux-gnu/liblua5.3.so" ] || {
+[ -f "/usr/lib/aarch64-linux-gnu/liblua5.4.so.0" ] || {
 	echo "liblua is missing, it will be installed"
 	sudo apt update
-	sudo apt install -y liblua5.3 libcurl3
+	sudo apt install -y liblua5.4-0
 }
 
-[ -e "lib-arm64/liblua53.so" ] || {
-	ln -s /usr/lib/aarch64-linux-gnu/liblua5.3.so lib-arm64/liblua53.so
+[ -e "lib-arm64/liblua54.so" ] || {
+	ln -s /usr/lib/aarch64-linux-gnu/liblua5.4.so.0 lib-arm64/liblua54.so
 }
 
-[ -e "lib-arm64/libfmod.so.13" ] || {
-	ln -s libfmod.so.13.6 lib-arm64/libfmod.so.13
-	ln -s libfmodstudio.so.13.6 lib-arm64/libfmodstudio.so.13
-}
-
-[ -f ~/.config/Olympus/config.json -o -d ~/.olympus ] || {
-	echo "Olympus is missing, it will be installed"
-	sudo apt update
-	sudo apt install -y wget
-	celeste_path="$(pwd)"
-	pushd /tmp
-	wget -O Olympus.zip https://github.com/pixelomer/Celeste-ARM64/releases/download/2021.09.07/Olympus.zip
-	unzip Olympus.zip
-	mv Olympus ~/.olympus
-	rm Olympus.zip
-	popd
-	pushd ~/.olympus
-	sed 's/read/answer\=y\;\#/g' < ./install.sh > install-nocheck.sh
-	chmod +x install-nocheck.sh
-	./install-nocheck.sh
-	popd
-	mkdir -p ~/.config/Olympus
-	cat > ~/.config/Olympus/config.json <<EOF
-{
-  "installs":[{
-    "type":"manual",
-    "name":"Celeste",
-    "path":"${celeste_path}"
-  }]
-}
-EOF
-	popd
+[ -e "MiniInstaller.dll" ] || {
+	echo "Installing Everest"
+	wget "https://github.com/EverestAPI/Everest/releases/latest/download/main.zip"
+	unzip main.zip
+	rsync -ar main/ ./
+	rm -rf main main.zip
+	dotnet MiniInstaller.dll
 }
 
 cat > "${APPSDIR}/Celeste.desktop" <<EOF
@@ -68,26 +40,17 @@ Type=Application
 Version=1.0
 Name=Celeste
 Comment=Celeste
-Exec=$(pwd)/Celeste
+Exec=$(pwd)/Celeste-arm64
 Icon=$(pwd)/Celeste.png
 Terminal=false
 Categories=Game;Application;
 EOF
 update-desktop-database "${APPSDIR}"
 
-rm -f System*.dll mscorlib.dll Mono.Posix.dll Mono.Security.dll monoconfig monomachineconfig
-
-cat > Celeste.exe.config <<'EOF'
-<?xml version="1.0" encoding="utf-8"?>
-<configuration>
-	<dllmap dll="fmod" os="linux" target="lib-arm64/libfmod.so.13"/>
-	<dllmap dll="fmodstudio" os="linux" target="lib-arm64/libfmodstudio.so.13">
-		<dllentry dll="lib-arm64/fmod_fix.so" name="FMOD_Studio_EventInstance_SetParameterValue" target="_FMOD_Studio_EventInstance_SetParameterValue"/>
-		<dllentry dll="lib-arm64/fmod_fix.so" name="FMOD_Studio_System_Create" target="_FMOD_Studio_System_Create"/>
-		<dllentry dll="lib-arm64/libfmodstudio.so.13" name="FMOD_Studio_System_GetLowLevelSystem" target="FMOD_Studio_System_GetCoreSystem"/>
-		<dllentry dll="lib-arm64/libfmodstudio.so.13" name="FMOD_Studio_EventInstance_TriggerCue" target="FMOD_Studio_EventInstance_KeyOff"/>
-	</dllmap>
-</configuration>
+rm -rf lib64-linux
+cat > Celeste <<'EOF'
+#!/usr/bin/env bash
+exec dotnet Celeste.dll
 EOF
-
-LD_LIBRARY_PATH="$(pwd)/lib-arm64" mono Celeste.exe
+chmod +x Celeste
+LD_LIBRARY_PATH="$(pwd)/lib-arm64:${LD_LIBRARY_PATH}" exec dotnet Celeste.dll
