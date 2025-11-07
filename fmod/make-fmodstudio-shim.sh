@@ -11,7 +11,7 @@ if [[ "${uname_m}" == "x86_64" ]]; then
     sed -i \
         -e 's/\(FMOD_Studio_System_Create\):/\1:\n  movl $0x20222, %esi/g' \
         -e 's/\(FMOD_Studio_EventInstance_SetParameterByName\):/\1:\n  movl $0x0, %edx/g' \
-        -e 's/\(FMOD_Studio_System_SetListenerAttributes_2\):/\1:\n  movl $0x0, %ecx/g' \
+        -e 's/\(FMOD_Studio_System_SetListenerAttributes\):/\1:\n  movl $0x0, %ecx/g' \
         libfmodstudio.so.13.tramp.S
 cat >> libfmodstudio.so.13.tramp.S <<'EOF'
 
@@ -25,7 +25,7 @@ elif [[ "${uname_m}" == "aarch64" || "${uname_m}" == "arm64" ]]; then
     sed -i \
         -e 's/\(FMOD_Studio_System_Create\):/\1:\n  movz x1, #0x0222\n  movk x1, #0x2, lsl #16/g' \
         -e 's/\(FMOD_Studio_EventInstance_SetParameterByName\):/\1:\n  movz x2, #0x0/g' \
-        -e 's/\(FMOD_Studio_System_SetListenerAttributes_2\):/\1:\n  movz x3, #0x0/g' \
+        -e 's/\(FMOD_Studio_System_SetListenerAttributes\):/\1:\n  movz x3, #0x0/g' \
         libfmodstudio.so.13.tramp.S
 cat >> libfmodstudio.so.13.tramp.S <<'EOF'
 
