@@ -4,7 +4,11 @@ set -e
 
 [[ -d Implib.so ]] || git clone https://github.com/yugr/Implib.so
 cd Implib.so
-./implib-gen.py --library-load-name libfmodstudio_real.so ../../otherlibs/fmodstudioapi/api/studio/lib/arm64/libfmodstudio.so.13
+
+arch="$(uname -m)"
+[ "$arch" == "aarch64" ] && arch="arm64"
+./implib-gen.py --no-lazy-load --library-load-name libfmodstudio_real.so \
+  ../../otherlibs/fmodstudioapi/api/studio/lib/$arch/libfmodstudio.so.13
 
 uname_m="$(uname -m)"
 if [[ "${uname_m}" == "x86_64" ]]; then

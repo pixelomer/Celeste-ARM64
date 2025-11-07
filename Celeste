@@ -9,38 +9,68 @@ else
 	APPSDIR="$HOME/.local/share/applications"
 fi
 
-type dotnet 2>/dev/null >&2 || {
-	echo ".NET is missing, it will be installed"
-	sudo apt update
-	sudo apt install -y dotnet8
-}
+if type apt 2>/dev/null >&2; then
+	type dotnet 2>/dev/null >&2 || {
+		echo ".NET is missing, it will be installed"
+		sudo apt update
+		sudo apt install -y dotnet8
+	}
 
-[ -f "/usr/lib/aarch64-linux-gnu/liblua5.4.so.0" ] || {
-	echo "liblua is missing, it will be installed"
-	sudo apt update
-	sudo apt install -y liblua5.4-0
-}
+	#FIXME: arm64 only
+	[ -f "/usr/lib/aarch64-linux-gnu/liblua5.4.so.0" ] || {
+		echo "liblua is missing, it will be installed"
+		sudo apt update
+		sudo apt install -y liblua5.4-0
+	}
 
-[ -e "lib-arm64/liblua54.so" ] || {
-	ln -s /usr/lib/aarch64-linux-gnu/liblua5.4.so.0 lib-arm64/liblua54.so
-}
+	rm -f lib-fmod2/liblua54.so
+	ln -s /usr/lib/aarch64-linux-gnu/liblua5.4.so.0 lib-fmod2/liblua54.so
+elif type dnf 2>/dev/null >&2; then
+	type dotnet 2>/dev/null >&2 || {
+		echo ".NET is missing, it will be installed"
+		sudo dnf install -y dotnet-runtime-8.0
+	}
 
-[ -e "MiniInstaller.dll" ] || {
-	echo "Installing Everest"
-	wget "https://github.com/EverestAPI/Everest/releases/latest/download/main.zip"
-	unzip main.zip
-	rsync -ar main/ ./
-	rm -rf main main.zip
-	dotnet MiniInstaller.dll
-}
+	#FIXME: x86_64 only
+	[ -f "/usr/lib64/liblua-5.4.so" ] || {
+		echo "liblua is missing, it will be installed"
+		sudo apt install -y lua lua-devel
+	}
+
+	rm -f lib-fmod2/liblua54.so
+	ln -s /usr/lib64/liblua-5.4.so lib-fmod2/liblua54.so
+fi
+
+if [ -e Celeste.dll ]; then bin="Celeste.dll"
+else bin="CelesteVCore.dll"
+fi
+
+if [ ! -e "$bin" ]; then
+	if [ "$CELESTE_FMOD2_VANILLA" == 1 ]; then
+		echo "Installing Vanilla Coreifier"
+		wget https://github.com/pixelomer/VanillaCoreifier/releases/download/2025.11.07/Binaries.zip
+		unzip -o Binaries.zip
+		rm -f Binaries.zip
+		dotnet VanillaCoreifier.dll --remote
+		bin="CelesteVCore.dll"
+	else
+		echo "Installing Everest"
+		wget "https://github.com/EverestAPI/Everest/releases/latest/download/main.zip"
+		unzip -o main.zip
+		rsync -ar main/ ./
+		rm -rf main main.zip
+		dotnet MiniInstaller.dll
+		bin="Celeste.dll"
+	fi
+fi
 
 cat > "${APPSDIR}/Celeste.desktop" <<EOF
 [Desktop Entry]
 Type=Application
 Version=1.0
 Name=Celeste
-Comment=Celeste
-Exec=$(pwd)/Celeste-arm64
+Comment=A video game about climbing a mountain
+Exec=$(pwd)/Celeste-fmod2
 Icon=$(pwd)/Celeste.png
 Terminal=false
 Categories=Game;Application;
@@ -53,4 +83,5 @@ cat > Celeste <<'EOF'
 exec dotnet Celeste.dll
 EOF
 chmod +x Celeste
-LD_LIBRARY_PATH="$(pwd)/lib-arm64:${LD_LIBRARY_PATH}" exec dotnet Celeste.dll
+rm -f *.so*
+LD_LIBRARY_PATH="$(pwd)/lib-fmod2:${LD_LIBRARY_PATH}" exec dotnet "$bin"

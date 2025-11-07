@@ -4,15 +4,15 @@ set -e
 cd "${0%/*}"
 
 echo "[+] Removing existing release"
-rm -rf Celeste-ARM64-prebuilt
-rm -f Celeste-ARM64-prebuilt.zip
-mkdir Celeste-ARM64-prebuilt
+rm -rf Celeste-FMOD2-prebuilt
+rm -f Celeste-FMOD2-prebuilt.zip
+mkdir Celeste-FMOD2-prebuilt
 
 echo "[+] Building everything"
 ./build.sh
 
 echo "[+] Copying binaries"
-cd Celeste-ARM64-prebuilt
+cd Celeste-FMOD2-prebuilt
 mkdir -p fmod
 cp -vr ../fmod/sound ../fmod/nosound fmod/
 mkdir -p otherlibs
@@ -23,4 +23,4 @@ cp -v ../Celeste ../make-release.sh ../patch.sh ../download-fmod.sh ./
 
 echo "[+] Creating zip"
 cd ..
-zip -r Celeste-ARM64-prebuilt.zip Celeste-ARM64-prebuilt
+zip -r Celeste-FMOD2-prebuilt.zip Celeste-FMOD2-prebuilt

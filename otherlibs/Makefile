@@ -1,3 +1,8 @@
+UNAME_M := $(shell uname -m)
+ifeq ($(UNAME_M),aarch64)
+UNAME_M := arm64
+endif
+
 all: libSDL2.so libfmod_SDL.so libFNA3D.so
 clean:
 	@echo "==> Cleaning..."
@@ -14,10 +19,10 @@ fmodstudioapi/.timestamp:
 
 libfmod_SDL.so: fmodstudioapi/.timestamp FMOD_SDL libSDL2.so
 	@echo "==> Building libfmod_SDL..."
-	cp fmodstudioapi/api/core/inc/* FMOD_SDL/
-	cp fmodstudioapi/api/core/lib/arm64/* FMOD_SDL/
-	cp fmodstudioapi/api/studio/inc/* FMOD_SDL/
-	cp fmodstudioapi/api/studio/lib/arm64/* FMOD_SDL/
+	cp "fmodstudioapi/api/core/inc/"* FMOD_SDL/
+	cp "fmodstudioapi/api/core/lib/$(UNAME_M)/"* FMOD_SDL/
+	cp "fmodstudioapi/api/studio/inc/"* FMOD_SDL/
+	cp "fmodstudioapi/api/studio/lib/$(UNAME_M)/"* FMOD_SDL/
 	sed 's/sdl2-config --cflags/\$$\$$\(pwd\)\/\.\.\/SDL\/sdl2-config --prefix="\$$\$$\(pwd\)\/\.\.\/SDL\/out" --cflags/g' < FMOD_SDL/Makefile > FMOD_SDL/Makefile.1
 	mv FMOD_SDL/Makefile.1 FMOD_SDL/Makefile
 	cd FMOD_SDL && make -j$$(nproc)

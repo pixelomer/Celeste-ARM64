@@ -34,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.runner }}64
-          path: Celeste-ARM64-prebuilt
+          path: Celeste-FMOD2-prebuilt
           retention-days: 1
       - name: Cache FMOD
         if: steps.restore-fmod.outputs.cache-hit != 'true' && matrix.runner == 'ubuntu-24.04-arm'

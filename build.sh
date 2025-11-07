@@ -2,25 +2,22 @@
 
 set -e
 
-if [ "$(uname -m)" != "aarch64" -a "$(uname -m)" != "arm64" ]; then
-	echo "Host is not arm64. Aborting."
-	exit 1
-fi
-
-if [ "$(uname)" != "Linux" -o "${CELESTE_ARM64_USE_DOCKER}" == 1 ]; then
-	echo "Host is not Linux, will attempt to compile with Docker."
+# CELESTE_FMOD2_USE_DOCKER
+# Only really useful for arm64 macOS users who want to compile libraries
+# for an arm64 Ubuntu 24.04 target (e.g. a Nintendo Switch)
+if [ "${CELESTE_FMOD2_USE_DOCKER}" == 1 ]; then
 	type docker 2>/dev/null >&2 || {
-		echo "Docker is missing, cannot cross compile."
+		echo "Docker is missing, cannot use Docker"
 		exit 1
 	}
 	sudo docker build -t celeste-arm64/build docker
-	sudo docker run --rm -t --user "$(id -u):$(id -g)" -v "$(pwd)":"/work" celeste-arm64/build bash -c "cd /work; CELESTE_ARM64_SKIP_DEPS=1 ./build.sh"
+	sudo docker run --rm -t --user "$(id -u):$(id -g)" -v "$(pwd)":"/work" celeste-arm64/build bash -c "cd /work; CELESTE_FMOD2_SKIP_DEPS=1 ./build.sh"
 	exit 0
 fi
 
 type sudo 2>/dev/null >&2 || { sudo() { "${@}"; }; }
 
-if [ "${CELESTE_ARM64_SKIP_DEPS}" == 1 ]; then
+if [ "${CELESTE_FMOD2_SKIP_DEPS}" == 1 ]; then
 	echo "Skipped dependency checks."
 	installed=1
 else
