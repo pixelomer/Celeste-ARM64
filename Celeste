@@ -16,15 +16,15 @@ if type apt 2>/dev/null >&2; then
 		sudo apt install -y dotnet8
 	}
 
-	#FIXME: arm64 only
-	[ -f "/usr/lib/aarch64-linux-gnu/liblua5.4.so.0" ] || {
+	uname_m="$(uname -m)"
+	[ -f "/usr/lib/${uname_m}-linux-gnu/liblua5.4.so.0" ] || {
 		echo "liblua is missing, it will be installed"
 		sudo apt update
 		sudo apt install -y liblua5.4-0
 	}
 
 	rm -f lib-fmod2/liblua54.so
-	ln -s /usr/lib/aarch64-linux-gnu/liblua5.4.so.0 lib-fmod2/liblua54.so
+	ln -s /usr/lib/${uname_m}-linux-gnu/liblua5.4.so.0 lib-fmod2/liblua54.so
 elif type dnf 2>/dev/null >&2; then
 	type dotnet 2>/dev/null >&2 || {
 		echo ".NET is missing, it will be installed"
